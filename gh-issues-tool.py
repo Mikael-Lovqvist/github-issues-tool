@@ -41,6 +41,11 @@ def get_all_matching_comments(token_stream):
 	return result
 
 def extract_issues_from_token_stream(token_stream, line_col_to_pos):
+	#ISSUE-8: Potential problem with multiple comments
+	#	We should count newlines when extracting the body and stop after 2 consequtive ones.
+	#	This is to prevent an issue that is closed to erase comments below it
+	#	labels: bug
+
 	def extract_body(issue_body):
 		first_index = match.index
 		for body_index in iter_span(match, pending, len(token_stream), operator.attrgetter('index'), start_offset=1):
@@ -193,7 +198,7 @@ if __name__ == '__main__':
 	parser.add_argument('--token-file', type=Path)
 	parser.add_argument('--user', type=str)
 	parser.add_argument('--repo', type=str)
-	parser.add_argument('--branch', type=str)
+	parser.add_argument('--branch', type=str, default='main')
 
 	#ISSUE-6: `--branch` is not documented
 	#	Document this.
@@ -217,3 +222,8 @@ if __name__ == '__main__':
 	for file in glob_gen:
 		print(f'Processing file {file}')
 		process_file(file, github_api=gh, read_only=args.read_only)
+
+#ISSUE-7: Construct autolinks for issues when issues are registered
+#	This will make it easier to navigate on `github.com`.
+#labels: needs-work
+
