@@ -158,7 +158,7 @@ def process_file(filename, github_api=github.dummy_api(), read_only=False, add_l
 			#	labels: needs-work
 
 			if add_location:
-				body += ['', f'Location: [{filename.name}](/{github_api.user}/{github_api.repo}/blob/main/{filename})']
+				body += ['', f'Location: [{filename.name}](/{github_api.user}/{github_api.repo}/blob/{github_api.branch}/{filename})']
 			registered_issue = github_api.create_issue(title, '\n'.join(body), labels=labels)
 			pending_operations.append(structure.pending_replacement(issue.tag_span, f'ISSUE-{registered_issue.number}'))
 			print(f'Created issue: {registered_issue.url}')
@@ -193,6 +193,11 @@ if __name__ == '__main__':
 	parser.add_argument('--token-file', type=Path)
 	parser.add_argument('--user', type=str)
 	parser.add_argument('--repo', type=str)
+	parser.add_argument('--branch', type=str)
+
+	#ISSUE-6: `--branch` is not documented
+	#	Document this.
+	#	labels: needs-documenting
 
 	args = parser.parse_args()
 
@@ -205,7 +210,7 @@ if __name__ == '__main__':
 		gh = github.dummy_api()
 	else:
 		if args.token_file:
-			gh = github.github_api(token_from_file=args.token_file, user=args.user, repo=args.repo)
+			gh = github.github_api(token_from_file=args.token_file, user=args.user, repo=args.repo, branch=args.branch)
 		else:
 			raise Exception('No token file specified')
 

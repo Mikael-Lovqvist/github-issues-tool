@@ -115,6 +115,9 @@ class github_api:
 
 
 class dummy_api:
+	user = 'dummy-user'
+	repo = 'dummy-repo'
+	branch = 'dummy-branch'
 	def __init__(self):
 		self.number = 0
 
