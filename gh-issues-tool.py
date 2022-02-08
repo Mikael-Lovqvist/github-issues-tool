@@ -119,9 +119,6 @@ def extract_labels_from_body(body):
 	return new_body, list(labels)
 
 
-
-
-
 #ISSUE-1: `add_location` configuration option missing
 #	`process_file` will automatically add location when creating issues, this should be configurable via the arguments.
 #	labels: needs-work
@@ -155,8 +152,13 @@ def process_file(filename, github_api=github.dummy_api(), read_only=False, add_l
 			body, labels = extract_labels_from_body(issue.body[1:])
 			#see https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls
 			#also https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#relative-links
+
+			#ISSUE-4: Assert that we have `user` and `repo` here
+			#	We should probably ammend `github_api` to construct links for us instead of hard coding them.
+			#	labels: needs-work
+
 			if add_location:
-				body += ['', f'Location: [{filename.name}]({filename})']
+				body += ['', f'Location: [{filename.name}](/{github_api.user}/{github_api.repo}/blob/main/{filename})']
 			registered_issue = github_api.create_issue(title, '\n'.join(body), labels=labels)
 			pending_operations.append(structure.pending_replacement(issue.tag_span, f'ISSUE-{registered_issue.number}'))
 			print(f'Created issue: {registered_issue.url}')
