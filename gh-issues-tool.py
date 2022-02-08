@@ -5,6 +5,11 @@ import token as TOKEN
 from utils import simple_pattern, simple_structure, enumerate_pending, iter_span
 import github
 
+#ISSUE-9: Filenames need escaping for markdown
+#	If there are underscores in the filename they need to be escaped.
+#	There might be other things that needs escaping too.
+#	labels: bug, needs-research
+
 
 class pattern:
 	existing_issue = 		simple_pattern(r'#ISSUE-([0-9]+):?(.*)$')
