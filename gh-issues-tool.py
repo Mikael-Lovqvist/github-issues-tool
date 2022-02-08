@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from pathlib import Path
 import tokenize, operator, re, argparse
 import token as TOKEN
